@@ -1,0 +1,47 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:80
+    volumes:
+      - ./spectate:/app
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+    restart: always
+    depends_on:
+      - mysql
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./spectate:/app
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_TEST_SETTINGS_MODULE}
+    command: [ "pytest" ]
+
+  mysql:
+    image: mysql:latest
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: False
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./logs/mysql-general.log:/var/log/mysql-general.log
