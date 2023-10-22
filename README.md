@@ -50,6 +50,7 @@ This command triggers unit tests using `pytest`.
 
 The API provides a range of endpoints for managing sports, events, and selections, including creation, retrieval, and updating functionalities. The endpoints include:
 
+- **`GET /`**: Swagger with all endpoints.
 - **`GET /sports/`**: Retrieve a list of sports.
 - **`GET /events/`**: Retrieve a list of events.
 - **`GET /selection/`**: Retrieve a list of selections.
@@ -65,3 +66,4 @@ The API provides a range of endpoints for managing sports, events, and selection
 - The project utilizes RAW SQL for operations due to specific documentation requirements, ensuring optimized database interactions.
 - Comprehensive unit tests are integrated to ensure the correctness of API endpoints.
 - Docker containerization simplifies deployment and management processes.
+- The Exercise01 is at the root of this project [./exercise01.py](exercise01.py) to run you just need ```python exercise01.py```
