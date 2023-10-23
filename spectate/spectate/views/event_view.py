@@ -1,11 +1,12 @@
-from ..serializers import EventSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from ..queries.events_queries import EventsQueries
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.forms.models import model_to_dict
+
+from ..queries.events_queries import EventsQueries
+from ..forms import EventForm as EventSerializer
 
 
 class EventView(APIView):

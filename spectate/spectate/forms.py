@@ -6,15 +6,16 @@ from .queries.events_queries import EventsQueries
 from rest_framework.exceptions import ErrorDetail, ValidationError
 from django import forms
 
+# Form for handling sports-related data
 
-class SportSerializer(forms.Form):
+
+class SportForm(forms.Form):
     name = forms.CharField(max_length=100)
     slug = forms.SlugField(max_length=100, widget=forms.TextInput(
-        attrs={'placeholder': 'Digite um slug único'}))
+        attrs={'placeholder': 'Enter a unique slug'}))
     active = forms.BooleanField(initial=True, required=False)
 
     def is_valid(self) -> bool:
-
         id = self.data['id'] if "id" in self.data else None
 
         if "slug" in self.data and not SportsQueries.is_unique_slug(self.data['slug'], id):
@@ -27,9 +28,10 @@ class SportSerializer(forms.Form):
             model = Sport
             fields = '__all__'
 
+# Form for handling event-related data
 
-class EventSerializer(forms.Form):
 
+class EventForm(forms.Form):
     name = forms.CharField(max_length=100)
     slug = forms.SlugField()
     active = forms.BooleanField(initial=True)
@@ -42,14 +44,13 @@ class EventSerializer(forms.Form):
     actual_start = forms.DateTimeField()
 
     def is_valid(self) -> bool:
-
         id = self.data['id'] if "id" in self.data else None
 
         if "slug" in self.data and not EventsQueries.is_unique_slug(self.data['slug'], id):
             self.add_error('slug', 'Not Unique')
 
         if "sport" in self.data and not SportsQueries.find(self.data['sport']):
-            self.add_error('sport', 'sport with ID doesnt exist')
+            self.add_error('sport', 'Sport with this ID does not exist')
 
         return super().is_valid()
 
@@ -58,9 +59,10 @@ class EventSerializer(forms.Form):
             model = Event
             fields = '__all__'
 
+# Form for handling selection-related data
 
-class SelectionSerializer(forms.Form):
 
+class SelectionForm(forms.Form):
     name = forms.CharField(max_length=100)
     event = forms.IntegerField()
     price = forms.DecimalField(max_digits=5, decimal_places=2)
@@ -69,8 +71,8 @@ class SelectionSerializer(forms.Form):
         'Unsettled', 'Unsettled'), ('Void', 'Void'), ('Lose', 'Lose'), ('Win', 'Win')])
 
     def is_valid(self) -> bool:
-        if "event" in self.data and not SportsQueries.find(self.data['event']):
-            self.add_error('event', 'event with ID doesnt exist')
+        if "event" in self.data and not EventsQueries.find(self.data['event']):
+            self.add_error('event', 'Event with this ID does not exist')
         return super().is_valid()
 
     class Model(serializers.ModelSerializer):

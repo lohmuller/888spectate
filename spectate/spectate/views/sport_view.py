@@ -6,7 +6,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, action
 from django.utils.decorators import method_decorator
 
-from ..serializers import SportSerializer
+# To avoid ORM from serializer, using forms
+from ..forms import SportForm as SportSerializer
 from ..queries.sports_queries import SportsQueries
 
 
