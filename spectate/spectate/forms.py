@@ -6,8 +6,6 @@ from .queries.events_queries import EventsQueries
 from rest_framework.exceptions import ErrorDetail, ValidationError
 from django import forms
 
-# Form for handling sports-related data
-
 
 class SportForm(forms.Form):
     name = forms.CharField(max_length=100)
@@ -27,8 +25,6 @@ class SportForm(forms.Form):
         class Meta:
             model = Sport
             fields = '__all__'
-
-# Form for handling event-related data
 
 
 class EventForm(forms.Form):
@@ -58,8 +54,6 @@ class EventForm(forms.Form):
         class Meta:
             model = Event
             fields = '__all__'
-
-# Form for handling selection-related data
 
 
 class SelectionForm(forms.Form):

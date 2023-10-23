@@ -21,8 +21,6 @@ class JsonResponseMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        # Verifica se a resposta contém um código de erro e se o cliente aceita JSON
         if response.status_code >= 500 and response.status_code <= 599 and request.META.get('HTTP_ACCEPT', '').lower() == 'application/json':
-            # Retorna uma resposta JSON com a mensagem de erro
             return JsonResponse({'error': 'sorry'}, status=response.status_code)
         return response

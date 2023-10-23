@@ -5,25 +5,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
 
-# class customValidators():#
-
-#    def unique_slug(value, instance=None):
-#        from .queries.sports_queries import SportsQueries
-#        print("UNIQUE_SLUG")
-#        print(vars(instance.name.field))
-#        SportsQueries.get_sport(id=instance.pk)
-#        valor_anterior = instance._meta.model.objects.get(pk=instance.pk).slug
-#        print(valor_anterior)#
-
-#        """ To avoid ORM, so we can use manually """
-#        if not SportsQueries.is_unique_slug(value):
-#            raise ValidationError(
-#                'This slug is already in use. Please choose a unique slug for this item.')
-#
-#    slug_validator = RegexValidator(
-#        regex=r'^[a-z0-9-]+$', message="Invalid slug. Slugs must contain only lowercase letters, hyphens, and numbers, without spaces.")
-
-
 class Sport(models.Model):
 
     id = models.AutoField(primary_key=True)

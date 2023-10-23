@@ -100,7 +100,6 @@ class SelectionQueries:
                 query = query.set(Field(colum), data[colum])
         sql_query = query.get_sql(quote_char="`")
 
-        print(sql_query)
         with connection.cursor() as cursor:
             cursor.execute(sql_query)
 

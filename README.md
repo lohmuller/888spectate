@@ -15,15 +15,23 @@
    cd 888spectate
    ```
 
-2. **Apply Migrations:**
+2. **Start Mysql:**
    ```bash
-   docker-compose run web python manage.py migrate
+   docker-compose up mysql -d 
    ```
 
-3. **Build and Start Docker Services:**
+2. **Building and running Migrations:**
+   Please wait while until the database is getting ready
    ```bash
-   docker-compose up --build -d
+   docker-compose run --build web python manage.py migrate
    ```
+
+3. **Starting the web:**
+   This will not attach the output console to check for error logs while running
+   ```bash
+   docker-compose run web
+   ```
+
 
 4. **Access the API:**
    The API documentation, powered by Swagger, is accessible at `http://localhost:80/`. Utilize tools like `curl`, Postman, or similar API clients to interact with the endpoints.

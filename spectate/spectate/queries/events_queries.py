@@ -120,7 +120,6 @@ class EventsQueries:
                 query = query.set(Field(colum), data[colum])
         sql_query = query.get_sql(quote_char="`")
 
-        print(sql_query)
         with connection.cursor() as cursor:
             cursor.execute(sql_query)
 
@@ -145,7 +144,6 @@ class EventsQueries:
         UPDATE {sport_table}
         SET active = (SELECT COUNT(*) FROM {cls.TABLE_NAME} WHERE sport_id = %s AND active = TRUE) > 0
         WHERE id = %s '''
-        print(query)
         with connection.cursor() as cursor:
             cursor.execute(query, (sport_id, sport_id))
 
