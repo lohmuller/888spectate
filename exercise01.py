@@ -29,4 +29,4 @@ def find_internal_nodes_num(input_list):
 
 # Example usage
 my_tree = [4, 4, 1, 5, -1, 4, 5]
-print(find_internal_nodes_num(my_tree))  # Output: 4
+print(find_internal_nodes_num(my_tree))  # Output: 3
