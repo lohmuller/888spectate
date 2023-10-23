@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import Sport, Event, Selection
 from .queries.sports_queries import SportsQueries
-from .queries.selections_queries import SelectionQueries
 from .queries.events_queries import EventsQueries
-from rest_framework.exceptions import ErrorDetail, ValidationError
 from django import forms
+
+"""""
+Not using Serializer to avoid ORM use while validating
+"""""
 
 
 class SportForm(forms.Form):

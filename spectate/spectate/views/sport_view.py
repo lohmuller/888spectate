@@ -3,8 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view, action
-from django.utils.decorators import method_decorator
 
 from ..forms import SportForm as SportSerializer
 from ..queries.sports_queries import SportsQueries

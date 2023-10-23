@@ -3,6 +3,12 @@ from ..models import Event, Sport, Selection
 from datetime import datetime
 from pypika import Query, Table, Field, functions as fn
 
+"""
+    This class provides methods to perform database operations related to the Sport
+    using Pypika, a SQLBuilder. It does not act as an Object-Relational Mapper (ORM) but instead
+    constructs and executes raw SQL queries using Pypika, following the document about not Using ORM
+"""
+
 
 class EventsQueries:
 

@@ -3,6 +3,14 @@ from ..models import Sport, Event
 from pypika import Query, Table, Field, functions as fn
 
 
+"""
+    SportsQueries class provides methods to perform database operations related to the Sport model
+    using Pypika, a SQLBuilder. It does not act as an Object-Relational Mapper (ORM) but instead
+    constructs and executes raw SQL queries using Pypika, allowing for more fine-grained control 
+    over the database interactions.
+"""
+
+
 class SportsQueries:
 
     TABLE_NAME = Sport._meta.db_table
