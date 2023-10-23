@@ -46,6 +46,21 @@ class EventsQueriesTestCase(TestCase):
         self.assertEqual(len(events), 1)
         self.assertEqual(events[0].id, self.event.id)
 
+    def test_list_events_not_match(self):
+        params = {
+            "name": "Not Exists",
+        }
+        events = EventsQueries.list(params)
+        self.assertEqual(len(events), 0)
+
+    def test_list_events_Regexp(self):
+        params = {
+            "name": "^Test.*",
+        }
+        events = EventsQueries.list(params)
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0].id, self.event.id)
+
     def test_create_event(self):
         event_data = {
             "name": "New Event",
