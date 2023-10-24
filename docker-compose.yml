@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:80
     volumes:
-      - ./spectate:/app
+      - ./web:/web
     ports:
       - "80:80"
     env_file:
@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./spectate:/app
+      - ./web:/web
     env_file:
       - .env
     environment:

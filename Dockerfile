@@ -1,7 +1,7 @@
 FROM python:3
 ENV PYTHONUNBUFFERED 1
-RUN mkdir /app
-WORKDIR /app
-ADD requirements.txt /app/
+RUN mkdir /web
+WORKDIR /web
+ADD requirements.txt /web/
 RUN pip install -r requirements.txt
-ADD ./spectate /app/
+ADD ./web /app/
