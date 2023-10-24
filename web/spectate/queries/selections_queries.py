@@ -111,7 +111,7 @@ class SelectionQueries:
         if data['active'] is not True:
             cls._triggerEvents(cls, data['event_id'])
 
-        return True
+        return connection.connection.affected_rows() > 0
 
     def _triggerEvents(cls, event_id):
         # when save selections it should be run

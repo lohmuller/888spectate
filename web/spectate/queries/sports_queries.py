@@ -99,5 +99,4 @@ class SportsQueries:
                 cursor.execute(query, params)
                 return cursor.fetchall()
             except Exception as e:
-                # Lidar com exceções de banco de dados aqui
                 raise

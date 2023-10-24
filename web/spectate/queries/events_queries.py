@@ -131,7 +131,7 @@ class EventsQueries:
         if data['active'] is not True:
             cls._triggerSports(cls, data['sport_id'])
 
-        return True
+        return connection.connection.affected_rows() > 0
 
     def _triggerSports(cls, sport_id):
         # when save events it should be run
