@@ -49,7 +49,7 @@ class SelectionView(APIView):
                     required=True
                 )
             ],
-            responses={200: 'OK', 400: 'Bad Request'}
+            responses={200: 'OK', 400: 'Bad Request', 404: 'Not Found'}
         )
         def patch(self, request, id, *args, **kwargs):
             selection = SelectionQueries.find(id)

@@ -23,11 +23,6 @@ class SportForm(forms.Form):
 
         return super().is_valid()
 
-    class Model(serializers.ModelSerializer):
-        class Meta:
-            model = Sport
-            fields = '__all__'
-
 
 class EventForm(forms.Form):
     name = forms.CharField(max_length=100)
@@ -52,11 +47,6 @@ class EventForm(forms.Form):
 
         return super().is_valid()
 
-    class Model(serializers.ModelSerializer):
-        class Meta:
-            model = Event
-            fields = '__all__'
-
 
 class SelectionForm(forms.Form):
     name = forms.CharField(max_length=100)
@@ -70,8 +60,3 @@ class SelectionForm(forms.Form):
         if "event" in self.data and not EventsQueries.find(self.data['event']):
             self.add_error('event', 'Event with this ID does not exist')
         return super().is_valid()
-
-    class Model(serializers.ModelSerializer):
-        class Meta:
-            model = Selection
-            fields = '__all__'

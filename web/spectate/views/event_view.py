@@ -52,7 +52,7 @@ class EventView(APIView):
                     example=1
                 )
             ],
-            responses={200: 'OK'}
+            responses={200: 'OK', 400: 'Bad Request', 404: 'Not Found'}
         )
         def patch(self, request, id, *args, **kwargs):
             event = EventsQueries.find(id)
