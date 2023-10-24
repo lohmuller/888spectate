@@ -4,15 +4,14 @@ from rest_framework.response import Response
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from ..forms import SportForm as SportSerializer
+from ..serializers import SportSerializer
+from ..forms import SportForm as SportForm
 from ..queries.sports_queries import SportsQueries
 
 
 class SportsView(APIView):
 
     http_method_names = ['get', 'post', 'patch']
-    serializer_classes = SportSerializer
-    raw_queries = SportsQueries
 
     @swagger_auto_schema(
         operation_id='sports_list',
@@ -30,8 +29,8 @@ class SportsView(APIView):
         responses={200: 'OK'}
     )
     def get(self, request):
-        sports = self.raw_queries.list(request.query_params)
-        serializer = self.serializer_classes.Model(sports, many=True)
+        sports = SportsQueries.list(request.query_params)
+        serializer = SportSerializer(sports, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -47,11 +46,11 @@ class SportsView(APIView):
         responses={201: 'Created', 400: 'Bad Request'}
     )
     def post(self, request):
-        serializer = self.serializer_classes(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        new_id = self.raw_queries.create(serializer.cleaned_data)
-        return Response({'id': new_id, **serializer.cleaned_data}, status=status.HTTP_201_CREATED)
+        form = SportForm(data=request.data)
+        if not form.is_valid():
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        new_id = SportsQueries.create(form.cleaned_data)
+        return Response({'id': new_id, **form.cleaned_data}, status=status.HTTP_201_CREATED)
 
     class UsingIdPath(APIView):
         @swagger_auto_schema(
@@ -77,14 +76,14 @@ class SportsView(APIView):
         )
         def patch(self, request, id, *args, **kwargs):
 
-            sport = SportsView.raw_queries.find(id)
+            sport = SportsQueries.find(id)
             if sport is None or sport.id is None:
                 return Response('Not Found', status=status.HTTP_404_NOT_FOUND)
 
-            serializer = SportsView.serializer_classes(
+            form = SportForm(
                 data={**request.data, 'id': id})
-            if not serializer.is_valid():
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            SportsView.raw_queries.update(id, serializer.cleaned_data)
+            if not form.is_valid():
+                return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+            SportsQueries.update(id, form.cleaned_data)
 
-            return Response(serializer.cleaned_data, status=status.HTTP_200_OK)
+            return Response(form.cleaned_data, status=status.HTTP_200_OK)

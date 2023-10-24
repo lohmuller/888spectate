@@ -44,4 +44,5 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+
 #      - ./logs/mysql-general.log:/var/log/mysql-general.log

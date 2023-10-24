@@ -16,6 +16,7 @@
    ```
 
 2. **Start Mysql:**
+   This command will run the mysql on background
    ```bash
    docker-compose up mysql -d 
    ```
@@ -27,7 +28,7 @@
    ```
 
 3. **Starting the web:**
-   This will not attach the output console to check for error logs while running
+   This command will attach the output console to check for error logs while running
    ```bash
    docker-compose run web
    ```
@@ -41,7 +42,7 @@
 To run unit tests, execute the following command inside the project folder:
 
 ```bash
-docker-compose run test
+docker-compose run --rm test
 ```
 
 This command triggers unit tests using `pytest`.

@@ -4,14 +4,14 @@ from rest_framework.response import Response
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from ..serializers import SelectionSerializer
 from ..queries.selections_queries import SelectionQueries
-from ..forms import SelectionForm as SelectionSerializer
+from ..forms import SelectionForm as SelectionForm
 
 
 class SelectionView(APIView):
 
     http_method_names = ['get', 'post', 'patch']
-    serializer_classes = [SelectionSerializer]
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -30,10 +30,9 @@ class SelectionView(APIView):
     )
     def get(self, request):
         query_params = request.query_params
-        sports = SelectionQueries.list(
+        selection = SelectionQueries.list(
             query_params)
-        serializer = SelectionSerializer.Model(sports, many=True)
-
+        serializer = SelectionSerializer(selection, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -51,11 +50,11 @@ class SelectionView(APIView):
         )
     )
     def post(self, request):
-        serializer = SelectionSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        new_id = SelectionQueries.create(serializer.cleaned_data)
-        return Response({'id': new_id, **serializer.cleaned_data}, status=status.HTTP_201_CREATED)
+        form = SelectionForm(data=request.data)
+        if not form.is_valid():
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        new_id = SelectionQueries.create(form.cleaned_data)
+        return Response({'id': new_id, **form.cleaned_data}, status=status.HTTP_201_CREATED)
 
     class UsingIdPath(APIView):
         @swagger_auto_schema(
@@ -73,12 +72,11 @@ class SelectionView(APIView):
             ),
             manual_parameters=[
                 openapi.Parameter(
-                    name='id',  # Nome do parâmetro da URL
-                    in_=openapi.IN_PATH,  # Especifica que é um parâmetro da URL
-                    # Tipo de dado do parâmetro (pode ser alterado conforme necessário)
+                    name='id',
+                    in_=openapi.IN_PATH,
                     type=openapi.TYPE_INTEGER,
-                    description='ID do esporte',  # Descrição do parâmetro
-                    required=True  # Especifica se o parâmetro é obrigatório ou opcional
+                    description='Selection ID',
+                    required=True
                 )
             ],
             responses={200: 'OK', 400: 'Bad Request'}
@@ -88,8 +86,8 @@ class SelectionView(APIView):
             if selection is None or selection.id is None:
                 return Response('Not Found', status=status.HTTP_404_NOT_FOUND)
 
-            serializer = SelectionSerializer(data={**request.data, 'id': id})
-            if not serializer.is_valid():
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            SelectionQueries.update(id, serializer.cleaned_data)
-            return Response(serializer.cleaned_data, status=status.HTTP_200_OK)
+            form = SelectionForm(data={**request.data, 'id': id})
+            if not form.is_valid():
+                return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+            SelectionQueries.update(id, form.cleaned_data)
+            return Response(form.cleaned_data, status=status.HTTP_200_OK)

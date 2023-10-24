@@ -3,16 +3,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from django.forms.models import model_to_dict
 
+from ..serializers import EventSerializer
 from ..queries.events_queries import EventsQueries
-from ..forms import EventForm as EventSerializer
+from ..forms import EventForm
 
 
 class EventView(APIView):
 
     http_method_names = ['get', 'post', 'patch']
-    serializer_classes = [EventSerializer]
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -44,10 +43,10 @@ class EventView(APIView):
     )
     def get(self, request):
         query_params = request.query_params
-        sports = EventsQueries.list(
+        events = EventsQueries.list(
             query_params)
 
-        serializer = EventSerializer.Model(sports, many=True)
+        serializer = EventSerializer(events, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -68,11 +67,11 @@ class EventView(APIView):
         responses={201: 'CREATED', 400: 'Bad Request'}
     )
     def post(self, request):
-        serializer = EventSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        new_id = EventsQueries.create(serializer.cleaned_data)
-        return Response({'id': new_id, **serializer.cleaned_data}, status=status.HTTP_201_CREATED)
+        form = EventForm(data=request.data)
+        if not form.is_valid():
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        new_id = EventsQueries.create(form.cleaned_data)
+        return Response({'id': new_id, **form.cleaned_data}, status=status.HTTP_201_CREATED)
 
     class UsingIdPath(APIView):
         @swagger_auto_schema(
@@ -92,12 +91,11 @@ class EventView(APIView):
             ),
             manual_parameters=[
                 openapi.Parameter(
-                    name='id',  # Nome do parâmetro da URL
-                    in_=openapi.IN_PATH,  # Especifica que é um parâmetro da URL
-                    # Tipo de dado do parâmetro (pode ser alterado conforme necessário)
+                    name='id',
+                    in_=openapi.IN_PATH,
                     type=openapi.TYPE_INTEGER,
-                    description='ID do esporte',  # Descrição do parâmetro
-                    required=True  # Especifica se o parâmetro é obrigatório ou opcional
+                    description='Event ID',
+                    required=True
                 )
             ],
             responses={200: 'OK'}
@@ -108,8 +106,8 @@ class EventView(APIView):
             if event is None or event.id is None:
                 return Response('Not Found', status=status.HTTP_404_NOT_FOUND)
 
-            serializer = EventSerializer(data={'id': id, **request.data})
-            if not serializer.is_valid():
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            EventsQueries.update(id, serializer.cleaned_data)
-            return Response(serializer.cleaned_data, status=status.HTTP_200_OK)
+            form = EventForm(data={'id': id, **request.data})
+            if not form.is_valid():
+                return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+            EventsQueries.update(id, form.cleaned_data)
+            return Response(form.cleaned_data, status=status.HTTP_200_OK)
