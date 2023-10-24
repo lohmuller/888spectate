@@ -1,6 +1,5 @@
 from django.db import connection
 from ..models import Event, Sport, Selection
-from datetime import datetime
 from pypika import Query, Table, Field, functions as fn
 
 """
@@ -134,15 +133,6 @@ class EventsQueries:
 
         return True
 
-    def _triggerEvents(cls, event_id):
-        # when save selections it should be run
-        event_table = Event._meta.db_table
-        with connection.cursor() as cursor:
-            cursor.execute(f'''
-        UPDATE {event_table}
-        SET active = (SELECT COUNT(*) FROM {cls.TABLE_NAME} WHERE event_id = %s AND active = TRUE) > 0
-        WHERE id = %s''', (event_id, event_id))
-
     def _triggerSports(cls, sport_id):
         # when save events it should be run
         sport_table = Sport._meta.db_table
@@ -154,15 +144,13 @@ class EventsQueries:
             cursor.execute(query, (sport_id, sport_id))
 
     @classmethod
-    def is_unique_slug(cls, value, id):
-        params = [value]
-        id_query = ""
+    def is_unique_slug(cls, value, id=None):
+        query = Query.from_(cls.TABLE_NAME).select(
+            1).where(Field('slug') == value)
         if id:
-            id_query = " AND `id` <> %s"
-            params.append(id)
-
-        query = f"""SELECT 1 AS `a` FROM `{cls.TABLE_NAME}` WHERE `slug` = %s {id_query} LIMIT 1"""
+            query = query.where(Field('id') != id)
+        query = query.limit(1).get_sql(quote_char="`")
 
         with connection.cursor() as cursor:
-            cursor.execute(query, params)
+            cursor.execute(query)
             return cursor.fetchone() is None

@@ -1,6 +1,5 @@
 from django.db import connection
-from ..models import Event, Sport, Selection
-from datetime import datetime
+from ..models import Event, Selection
 from pypika import Query, Field, functions as fn
 
 """
